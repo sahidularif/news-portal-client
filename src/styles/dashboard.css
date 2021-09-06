@@ -1,0 +1,158 @@
+.nav-container {
+  float: right;
+  width: 100%;
+}
+.main-container {
+  background-color: #f1f1f1;
+}
+.header {
+  overflow: hidden;
+  background: #151371;
+  padding: 20px 10px;
+  height: 87px;
+  min-width: 100%;
+}
+
+.header a {
+  float: left;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 25px;
+  border-radius: 4px;
+}
+
+.header a.logo {
+  font-size: 25px;
+  font-weight: bold;
+}
+.brand-icon p {
+  line-height: 2px;
+  font-size: 10px;
+  width: 100%;
+}
+
+.header a.active {
+  background-color: white;
+  color: #151371;
+  border-radius: 40px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 21px;
+}
+.sidenav-container {
+  background-color: #ddd;
+  min-height: 100vh;
+  min-width: 100%;
+  margin: 0px;
+  padding: 0px;
+  letter-spacing: 1px;
+  color: #fff;
+  font-weight: bolder;
+}
+
+.sidemenu ul li {
+  list-style-type: none;
+  color: #5a5278;
+  padding: 10px;
+  width: 100%;
+}
+.sidemenu ul li a {
+  list-style-type: none;
+  text-decoration: none;
+  color: #5a5278;
+}
+.sidemenu ul li a:hover {
+  text-decoration: underline;
+  font-weight: 600;
+  color: slateblue;
+}
+.bg-top {
+  background-color: #fff;
+  color: #151371;
+  height: 87px;
+  margin: 0px;
+  padding: 0px;
+}
+.brand-icon h2 span {
+  color: rgb(235, 97, 38);
+}
+.right-side {
+  background-color: #f1f1f1;
+  margin: 0px;
+  padding: 0px;
+}
+.brand-icon h2 {
+  font-weight: bold;
+}
+.entry-form {
+  justify-content: center;
+  color: #5a5278;
+  background-color: white;
+  box-shadow: 0px 1px 8px 2px rgba(82, 95, 109, 0.15);
+  border-radius: 15px;
+}
+.entry-form span {
+  color: rgb(235, 97, 38);
+  font-size: 14px;
+}
+.new-notification-title {
+  background: linear-gradient(
+    89.68deg,
+    rgba(90, 82, 120, 0) 0.11%,
+    rgba(90, 82, 120, 0.3) 50%,
+    rgba(90, 82, 120, 0) 99.72%
+  );
+
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+  align-items: center;
+  padding: 10px 0px;
+}
+.new-notification-title h4 {
+  color: white;
+  text-transform: uppercase;
+}
+.new-notification-title p {
+  margin-top: 10px;
+  height: 1px;
+  background: #fff;
+  width: 100%;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.notification-subtitle span {
+  color: yellow;
+}
+.btn-submit {
+  background-color: rgb(235, 97, 38);
+  color: #ffffff;
+  border-radius: 50rem;
+  font-weight: 700;
+}
+.data-table {
+  background-color: #fff;
+  box-shadow: 0px 1px 8px 2px rgba(82, 95, 109, 0.15);
+}
+.header-right {
+  float: right;
+}
+
+@media screen and (max-width: 500px) {
+  .header a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+
+  .header-right {
+    float: none;
+  }
+  .sidenav-container {
+    height: auto;
+  }
+}

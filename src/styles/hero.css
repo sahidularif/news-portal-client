@@ -1,0 +1,41 @@
+.hero-container {
+  margin: auto auto;
+}
+.brand-bar p {
+  line-height: 2px;
+  text-transform: uppercase;
+}
+.brand-bar h2 {
+  font-weight: bold;
+  color: #392564;
+  letter-spacing: 2px;
+}
+
+.top-news {
+  display: flex;
+  margin: 0px;
+  padding: 0px;
+  border-bottom: 1px solid gray;
+}
+.carousel-caption {
+  background-color: #ddd;
+  opacity: 0.5;
+  color: #392564;
+}
+.carousel-caption h5 {
+  color: black;
+}
+.top-news h6 {
+  text-align: start;
+}
+.top-content h6 {
+  font-size: 15px;
+}
+.top-news img {
+  height: 60px;
+  width: 60px;
+}
+.carousel img {
+  width: 300px;
+  height: 400px;
+}
