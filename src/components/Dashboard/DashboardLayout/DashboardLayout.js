@@ -13,14 +13,14 @@ const DashboardLayout = (props) => {
           <div className="row justify-content-end main-container gx-0">
             <div className="header">
               <a href="/" className="logo">
-                Add Employee
+                {props.title}
               </a>
               {/* <div className="header-right">
                             <a className="active" href="#home">LOG OUT</a>
                         </div> */}
             </div>
           </div>
-          <div className="row">
+          <div className="row g-0 m-0">
           {props.children}
           </div>
         </div>

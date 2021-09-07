@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import img1 from "../../images/AAO6Jo5.jpg";
-import img2 from "../../images/ronaldo.jpg";
-import img3 from "../../images/taliban.jpg";
 import "../../styles/hero.css";
 
 const SlidingBanner = () => {
+  const [articles, setArticles] = useState([])
+  useEffect(() => {
+    fetch('http://localhost:4000/articles')
+      .then(res => res.json())
+      .then(data => {
+        setArticles(data);
+      })
+  }, []);
   return (
     <div
       id="carouselExampleDark"
@@ -33,29 +39,21 @@ const SlidingBanner = () => {
           aria-label="Slide 3"
         ></button>
       </div>
+
       <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="10000">
-          <img src={img1} class="d-block w-100 img-fluid" alt="news" />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-            <p>Some representative placeholder content for the first slide.</p>
-          </div>
-        </div>
-        <div class="carousel-item" data-bs-interval="2000">
-          <img src={img2} class="d-block w-100 img-fluid" alt="news" />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Second slide label</h5>
-            <p>Some representative placeholder content for the second slide.</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img src={img3} class="d-block w-100 img-fluid" alt="news" />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Third slide label</h5>
-            <p>Some representative placeholder content for the third slide.</p>
-          </div>
-        </div>
+        {
+          articles.map(pd =>
+            <div class="carousel-item active" data-bs-interval="10000">
+              <img src={img1} class="d-block w-100 img-fluid" alt="news" />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>{pd.title} </h5>
+                <p>Some representative placeholder content for the first slide.</p>
+              </div>
+            </div>
+          )
+        }
       </div>
+
       <button
         class="carousel-control-prev"
         type="button"

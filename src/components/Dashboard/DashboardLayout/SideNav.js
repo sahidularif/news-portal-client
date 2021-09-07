@@ -20,8 +20,8 @@ const SideNav = () => {
                     <li>
                     <i class="fas fa-user-shield"></i> <b>ADMIN</b>
                         <ul>
-                            <li><Link to="/"><i class="fas fa-users"></i> Add Admin</Link></li>
-                            <li><Link to="/addEmployee"><i class="fas fa-user-plus"></i> Post Article</Link></li>                            
+                            <li><Link to="/dashboard/add-admin"><i class="fas fa-users"></i> Add Admin</Link></li>
+                            <li><Link to="/dashboard/post-article"><i class="fas fa-user-plus"></i> Post Article</Link></li>                            
                         </ul>
                     </li>
                     

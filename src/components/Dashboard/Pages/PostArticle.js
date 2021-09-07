@@ -2,39 +2,76 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const PostArticle = () => {
+  const { register, handleSubmit, watch, errors } = useForm();
+  const [file, setFile] = useState(null);
   const [success, setSuccess] = useState(false);
-  const [employee, setEmployee] = useState({});
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  const [info, setInfo] = useState({
+    author: "",
+    title: "",
+    category: "",
+    article: "",
+  });
+
+  // Handle input
+  const handleBlur = (e) => {
+    const newService = { ...info };
+    newService[e.target.name] = e.target.value;
+    setInfo(newService);
+  };
+
+  // Handle file upload
+  const handleFileChange = (e) => {
+    const newFile = e.target.files[0];
+    console.log(newFile);
+    setFile(newFile);
+  };
 
   // When form submitted:
-  const onSubmit = (data) => {
-    // let employee = JSON.stringify(data);
-    // // console.log(data)
-    // fetch("https://immense-sea-72965.herokuapp.com/customers", {
-    //     method: "POST",
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: employee,
-    // })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //         setSuccess(true);
-    //         // console.log(data)
-    //         // console.log((success));
-    //     });
+  const handleFormSubmit = () => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('author', info.author);
+    formData.append('category', info.category);
+    formData.append('title', info.title);
+    formData.append('article', info.article);
+
+    fetch('https://aqueous-fortress-58437.herokuapp.com/post-article', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => {
+        response.json()
+        setSuccess(true)
+      })
+      .then((data) => {
+        setTimeout(() => {
+          setSuccess(false)
+        }, 3000);
+        // handleServiceUpdate();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
     <div className="container-fluid">
+      <div className="row justify-content-center mt-3 justify-content-center">
+        <div className="col-md-6">
+          {
+            success && (
+              <div className="col-md-8 alert alert-success" role="alert">
+                <span><i class="fas fa-check-circle"></i> Article successfully published!</span>
+              </div>
+            )
+          }
+        </div>
+      </div>
       <div className="row m-0 p-0 justify-content-center mt-5">
         <div className="col-md-10 entry-form p-5">
           <form
             className="row g-3 text-start"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(handleFormSubmit)}
           >
             <div class="col-md-9">
               <label for="first_name" className="form-label">
@@ -42,12 +79,13 @@ const PostArticle = () => {
               </label>
               <input
                 type="text"
-                name="first_name"
+                name="author"
                 className="form-control"
-                id="first_name"
-                {...register("first_name", { required: true })}
+                id="author"
+                onBlur={handleBlur}
+                ref={register({ required: true })}
               />
-              {errors.first_name && (
+              {errors.author && (
                 <span>
                   <i class="fas fa-exclamation-triangle"></i> This field is
                   required
@@ -59,20 +97,21 @@ const PostArticle = () => {
                 Article Category
               </label>
               <select
-                class="form-select"
+                className="form-select"
                 name="category"
-                id="autoSizingSelect"
-                {...register("category", { required: true })}
+                onChange={handleBlur}
+                id="category"
+                ref={register({ required: true })}
               >
                 <option selected>Choose...</option>
-                <option value="1">Business</option>
-                <option value="2">Technology</option>
-                <option value="3">Politics</option>
-                <option value="3">Sports</option>
+                <option value="business">Business</option>
+                <option value="technology">Technology</option>
+                <option value="politics">Politics</option>
+                <option value="sports">Sports</option>
               </select>
               {errors.category && (
                 <span>
-                  <i class="fas fa-exclamation-triangle"></i> This field is
+                  <i className="fas fa-exclamation-triangle"></i> This field is
                   required
                 </span>
               )}
@@ -83,12 +122,13 @@ const PostArticle = () => {
               </label>
               <input
                 type="text"
-                name="first_name"
+                name="title"
                 className="form-control"
-                id="first_name"
-                {...register("first_name", { required: true })}
+                id="title"
+                onBlur={handleBlur}
+                ref={register({ required: true })}
               />
-              {errors.first_name && (
+              {errors.title && (
                 <span>
                   <i class="fas fa-exclamation-triangle"></i> This field is
                   required
@@ -100,11 +140,12 @@ const PostArticle = () => {
                 Article
               </label>
               <textarea
-                class="form-control"
+                className="form-control"
                 id="exampleFormControlTextarea1"
                 rows="3"
                 name="article"
-                {...register("article", { required: true })}
+                onBlur={handleBlur}
+                ref={register({ required: true })}
               ></textarea>
               {errors.article && (
                 <span>
@@ -114,7 +155,7 @@ const PostArticle = () => {
               )}
             </div>
             <div className="col-md-7">
-              <div class="input-group">
+              <div className="input-group">
                 <input
                   type="file"
                   class="form-control"
@@ -122,9 +163,10 @@ const PostArticle = () => {
                   aria-describedby="inputGroupFileAddon04"
                   aria-label="Upload"
                   name="image"
-                  {...register("image", { required: true })}
+                  onChange={handleFileChange}
+                  ref={register({ required: true })}
                 />
-                {errors.article && (
+                {errors.image && (
                   <span>
                     <i class="fas fa-exclamation-triangle"></i> This field is
                     required
