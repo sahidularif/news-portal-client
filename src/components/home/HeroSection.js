@@ -47,7 +47,7 @@ const HeroSection = () => {
                 {
                   articles.map(pd =>
                     <div className="top-news d-flex">
-                      <img src={pd.image.img} alt="" className="img-fluid" />
+                      <img src={`data:image/png;base64,${pd.image.img}`} alt="" className="img-fluid" />
                       <div className="top-content ps-2 pe-2">
                         <h6>
                           {pd.title}

@@ -15,6 +15,8 @@ const Navbar = () => {
     <a href="#about">PAGES</a>
     <a href="#about">BLOG</a>
     <a href="#about">ABOUT</a>
+    <a href="/dashboard">Dashboard</a>
+    
     <a href={void(0)} class="icon" onclick={()=>setRes(true)}>
       <i class="fa fa-bars"></i>
     </a>

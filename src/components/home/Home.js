@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from '../Footer/Footer';
 import Header from "./Header";
 import HeroSection from "./HeroSection";
 import Navbar from './Navbar';
@@ -8,7 +9,7 @@ const Home = () => {
       <Header />
       <Navbar />
       <HeroSection/>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };
