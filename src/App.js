@@ -8,6 +8,7 @@ import AddAdmin from "./components/Dashboard/Pages/AddAdmin";
 import PostArticle from "./components/Dashboard/Pages/PostArticle";
 import PrivateRoute from "./components/Dashboard/PrivateRoute/PrivateRoute";
 import Home from "./components/home/Home";
+import NewsDetails from "./components/home/NewsDetails";
 import Login, { sessionInfo } from "./components/login/Login";
 export const LoginContext = createContext();
 export const SessionContext = createContext();
@@ -39,6 +40,9 @@ function App() {
                 <DashboardLayout title='Post Article'>
                   <PostArticle />
                 </DashboardLayout>
+              </PrivateRoute>
+              <PrivateRoute exact path="/article/:articleId">
+                <NewsDetails />
               </PrivateRoute>
 
               <PrivateRoute exact path="/dashboard/add-admin">

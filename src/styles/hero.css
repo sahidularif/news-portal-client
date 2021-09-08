@@ -56,6 +56,17 @@
   width: 90px;
   border-radius: 5px;
 }
+.main-news-container h4 {
+  text-align: start;
+  line-height: 35px;
+  background-color: #ddd;
+}
+.main-news {
+  margin-bottom: 30px;
+}
+.main-news img {
+  height: 200px;
+}
 .carousel img {
   width: 300px;
   height: 400px;

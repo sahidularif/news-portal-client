@@ -1,15 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const MainNews = (props) => {
-    const { author, title, category, image, article } = props.article;
+    const { author, title, category, image, article, _id} = props.article;
     return (
-        <div className="col-md-6">
-            <div class="card" style={{width: '22rem'}}>
+        <div className="col-md-6 main-news">
+            <div class="card" style={{ width: '22rem' }}>
                 <img src={`data:image/png;base64,${image.img}`} class="card-img-top" alt="..." />
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <h5 class="card-title">{title}</h5>
+                    <Link to={`article/` + _id } class="btn btn-primary">Read more</Link>
                 </div>
             </div>
         </div>
@@ -17,3 +17,6 @@ const MainNews = (props) => {
 };
 
 export default MainNews;
+{/* <Route path="/product/:productKey">
+            <ProductDetail></ProductDetail>
+          </Route> */}

@@ -6,7 +6,13 @@ import SlidingBanner from "./SlidingBanner";
 
 const HeroSection = () => {
   const [articles, setArticles] = useState([])
+  const [category, setCategory] = useState(null)
+  const [selectedArticle, setSelectedArticle] = useState([])
   const reduceArticles = [];
+
+  const handleCategory = (e) => {
+    setCategory(e.target.value)
+  }
   useEffect(() => {
     fetch(`http://localhost:4000/articles/?results=6`)
       .then(res => res.json())
@@ -18,8 +24,25 @@ const HeroSection = () => {
         });
         setArticles(reduceArticles);
       });
+    // selected articles
+    fetch(`http://localhost:4000/articles`)
+      .then(res => res.json())
+      .then(json => {
+        if (category) {
+          let article = json.filter((article) =>{
+            return article.category === category
+          });
+          setSelectedArticle(article);
+        }
+        else {
+          setSelectedArticle(json);
+        }
+      });
+   
   }, []);
-  console.log(articles);
+  console.log(category);
+  console.log(selectedArticle);
+  // console.log(articles);
   return (
     <div className="container-fluid g-0 m-0 p-0">
       <div className="row hero-section g-0">
@@ -32,7 +55,7 @@ const HeroSection = () => {
           </div>
           <div className="row">
             <div className="col-md-8 carousel-banner px-3 g-0">
-              <SlidingBanner /><hr/>
+              <SlidingBanner /><hr />
               <div className="row all-news mt-3">
 
                 {
@@ -40,8 +63,22 @@ const HeroSection = () => {
                 }
 
               </div>
-              <div className="row">
-                <h5>Main News</h5>
+              <div className="row main-news-container">
+                <h4 className="d-flex justify-content-between">Main News <span>
+                  <form class="row gy-2 gx-3 align-items-center">
+                    <div class="col-auto">
+                      <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+                      <select class="form-select" id="autoSizingSelect" onChange={handleCategory}>
+                        <option selected>Select Article Category</option>
+                        <option value="business">Business</option>
+                        <option value="technology">Technology</option>
+                        <option value="politics">Politics</option>
+                        <option value="sports">Sports</option>
+                      </select>
+                    </div>
+                  </form>
+                </span></h4>
+
                 <div className="col-md-12">
                   <div className="row">
                     {
