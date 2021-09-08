@@ -24,19 +24,19 @@ const SlidingBanner = () => {
             <div class="carousel-item active" data-bs-interval="10000">
               <img src={`data:image/png;base64,${articles[0]?.image.img}`} class="d-block w-100 img-fluid" alt="news" />
               <div class="carousel-caption d-none d-md-block">
-                <h5>{articles[0]?.title} </h5>
-                <p>Some representative placeholder content for the first slide.</p>
+                <h6>{articles[0]?.title} </h6>
+                {/* <p>Some representative placeholder content for the first slide.</p> */}
               </div>
             </div>
           
         
         {
-          articles.map(article =>
+          articles.map((article) =>
             <div class="carousel-item" data-bs-interval="10000">
               <img src={`data:image/png;base64,${article.image.img}`} class="d-block w-100 img-fluid" alt="news" />
               <div class="carousel-caption d-none d-md-block">
-                <h5>{article.title} </h5>
-                <p>Some representative placeholder content for the first slide.</p>
+                <h6>{article.title} </h6>
+                {/* <p>{article.article}</p> */}
               </div>
             </div>
           )
