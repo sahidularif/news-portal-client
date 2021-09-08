@@ -14,7 +14,7 @@ const HeroSection = () => {
     setCategory(e.target.value)
   }
   useEffect(() => {
-    fetch(`http://localhost:4000/articles/?results=6`)
+    fetch(`https://aqueous-fortress-58437.herokuapp.com/?results=6`)
       .then(res => res.json())
       .then(json => {
         json.forEach(articles => {
@@ -25,7 +25,7 @@ const HeroSection = () => {
         setArticles(reduceArticles);
       });
     // selected articles
-    fetch(`http://localhost:4000/articles`)
+    fetch(`https://aqueous-fortress-58437.herokuapp.com/articles`)
       .then(res => res.json())
       .then(json => {
         if (category) {
