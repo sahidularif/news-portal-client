@@ -4,7 +4,7 @@ import "../../styles/hero.css";
 const SlidingBanner = () => {
   const [articles, setArticles] = useState([])
   useEffect(() => {
-    fetch('http://localhost:4000/articles')
+    fetch('https://aqueous-fortress-58437.herokuapp.com/articles')
       .then(res => res.json())
       .then(data => {
         setArticles(data);

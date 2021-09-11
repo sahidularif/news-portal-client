@@ -45,7 +45,7 @@ function App() {
                   <PostArticle />
                 </DashboardLayout>
               </PrivateRoute>
-              <PrivateRoute exact path="/article/:articleId">
+              <PrivateRoute exact path="/article/:_id">
                 <NewsDetails />
               </PrivateRoute>
 

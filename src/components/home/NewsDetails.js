@@ -4,23 +4,19 @@ import Navbar from '../home/Navbar';
 import Header from './Header';
 const NewsDetails = () => {
     const [article, setArticle] = useState([])
-    const { id } = useParams();
-    
+    const { _id } = useParams();
     useEffect(() => {
 
-        fetch(`http://localhost:4000/articles`)
+        fetch(`https://aqueous-fortress-58437.herokuapp.com/articles`)
             .then(res => res.json())
             .then(json => {
-                if (json) {
-                    let article = json.find((article) => {
-                        return article._id === id
-                    });
-                    setArticle(json);
-                }
+                let data = json.find((article) => {
+                    return article._id === _id
+                });
+                setArticle(data);
             });
 
     }, []);
-
     return (
         <div className="container-fluid">
             <div className="row">
@@ -28,15 +24,17 @@ const NewsDetails = () => {
                 <Navbar />
             </div>
             <div className="row align-items-center justify-content-center">
-                <img src={article.image} alt="" />
+
                 <div className="col-md-10">
-                    <div className="card">
-                        <div className="card-header">
-                            News Details
-                        </div>
-                        <div className="card-body">
-                            <h5 className="card-title">{article.title}</h5>
-                            <p className="card-text">{article.article}</p>
+                    <div class="card mb-3">
+                        <img src={article.image} class="card-img-top" alt="..." />
+                        <div class="card-body">
+                            <h5 class="card-title">{article.title}</h5>
+                            <p class="card-text">{article.article} </p>
+                            <p class="card-text">
+                                <small className="text-primary">Published by: {article.author}</small><br/>
+                                <small className="text-muted">Posted 3 mins ago</small>
+                            </p>
                         </div>
                     </div>
                 </div>

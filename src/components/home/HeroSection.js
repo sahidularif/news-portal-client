@@ -6,17 +6,31 @@ import SlidingBanner from "./SlidingBanner";
 
 const HeroSection = () => {
   const [articles, setArticles] = useState([])
+  const [topNews, setTopNews] = useState([])
   const [category, setCategory] = useState(null)
   const [selectedArticle, setSelectedArticle] = useState([])
-  const reduceArticles = [];
-
+  const [mainArticles, setMainArticles] = useState([])  
   const handleCategory = (e) => {
     setCategory(e.target.value)
   }
   useEffect(() => {
-    fetch(`http://localhost:4000/articles/?results=6`)
+    //
+    fetch(`https://aqueous-fortress-58437.herokuapp.com/articles/?results=3`)
+    .then(res => res.json())
+    .then(json => {
+      const reduceArticles = [];
+      json.forEach(articles => {
+        if (reduceArticles.length < 3) {
+          reduceArticles.push(articles);
+        }
+      });
+      setTopNews(reduceArticles);
+    });
+
+    fetch(`https://aqueous-fortress-58437.herokuapp.com/articles/?results=6`)
       .then(res => res.json())
       .then(json => {
+        const reduceArticles = [];
         json.forEach(articles => {
           if (reduceArticles.length < 6) {
             reduceArticles.push(articles);
@@ -25,24 +39,22 @@ const HeroSection = () => {
         setArticles(reduceArticles);
       });
     // selected articles
-    fetch(`http://localhost:4000/articles`)
+    fetch(`https://aqueous-fortress-58437.herokuapp.com/articles`)
       .then(res => res.json())
       .then(json => {
         if (category) {
           let article = json.filter((article) =>{
-            return article.category === category
+            return article.category == category;
           });
           setSelectedArticle(article);
         }
-        else {
+        if(!category) {
           setSelectedArticle(json);
         }
       });
    
   }, []);
-  console.log(category);
-  console.log(selectedArticle);
-  // console.log(articles);
+
   return (
     <div className="container-fluid g-0 m-0 p-0">
       <div className="row hero-section g-0">
@@ -57,11 +69,9 @@ const HeroSection = () => {
             <div className="col-md-8 carousel-banner px-3 g-0">
               <SlidingBanner /><hr />
               <div className="row all-news mt-3">
-
                 {
                   articles.map((article) => <AllNews article={article}></AllNews>)
                 }
-
               </div>
               <div className="row main-news-container">
                 <h4 className="d-flex justify-content-between">Main News <span>
@@ -78,21 +88,20 @@ const HeroSection = () => {
                     </div>
                   </form>
                 </span></h4>
-
                 <div className="col-md-12">
                   <div className="row">
                     {
-                      articles.map((article) => <MainNews article={article}></MainNews>)
+                      selectedArticle.map((article) => <MainNews article={article}></MainNews>)
                     }
                   </div>
                 </div>
               </div>
             </div>
             <div className="col-md-4 g-0 px-4 border">
-              <h5 className="top-news-heading">Top News</h5>
+              <h5 className="">Top News</h5>
               <div>
                 {
-                  articles.map((article, id) =>
+                  topNews.map((article, id) =>
                     <div className="top-news d-flex" key={id}>
                       <img src={article.image} alt="" className="img-fluid" />
                       <div className="top-content ps-2 pe-2">
@@ -110,16 +119,6 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
-          {/* <div className="row">
-            <div className="col-12">
-              <h1>arif</h1>
-              {
-                    text.map(pd => 
-                      <h1>{pd.name}</h1>
-                   )
-                }
-            </div>
-          </div> */}
         </div>
       </div>
     </div>
