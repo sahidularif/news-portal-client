@@ -13,16 +13,16 @@ const Header = () => {
          
         </div>
         <div className="col-md-6">
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               placeholder="Archive search: Enter title"
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
             />
-            <span class="input-group-text" id="basic-addon2">
-            <i class="fas fa-search"></i>
+            <span className="input-group-text" id="basic-addon2">
+            <i className="fas fa-search"></i>
             </span>
           </div>
         </div>

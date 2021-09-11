@@ -14,7 +14,7 @@ const HeroSection = () => {
     setCategory(e.target.value)
   }
   useEffect(() => {
-    fetch(`https://aqueous-fortress-58437.herokuapp.com/?results=6`)
+    fetch(`http://localhost:4000/articles/?results=6`)
       .then(res => res.json())
       .then(json => {
         json.forEach(articles => {
@@ -25,7 +25,7 @@ const HeroSection = () => {
         setArticles(reduceArticles);
       });
     // selected articles
-    fetch(`https://aqueous-fortress-58437.herokuapp.com/articles`)
+    fetch(`http://localhost:4000/articles`)
       .then(res => res.json())
       .then(json => {
         if (category) {
@@ -65,10 +65,10 @@ const HeroSection = () => {
               </div>
               <div className="row main-news-container">
                 <h4 className="d-flex justify-content-between">Main News <span>
-                  <form class="row gy-2 gx-3 align-items-center">
-                    <div class="col-auto">
-                      <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                      <select class="form-select" id="autoSizingSelect" onChange={handleCategory}>
+                  <form className="row gy-2 gx-3 align-items-center">
+                    <div className="col-auto">
+                      <label className="visually-hidden" for="autoSizingSelect">Preference</label>
+                      <select className="form-select" id="autoSizingSelect" onChange={handleCategory}>
                         <option selected>Select Article Category</option>
                         <option value="business">Business</option>
                         <option value="technology">Technology</option>
@@ -92,16 +92,16 @@ const HeroSection = () => {
               <h5 className="top-news-heading">Top News</h5>
               <div>
                 {
-                  articles.map((article) =>
-                    <div className="top-news d-flex">
-                      <img src={`data:image/png;base64,${article.image.img}`} alt="" className="img-fluid" />
+                  articles.map((article, id) =>
+                    <div className="top-news d-flex" key={id}>
+                      <img src={article.image} alt="" className="img-fluid" />
                       <div className="top-content ps-2 pe-2">
                         <h6>
                           {article.title}
                         </h6>
                         <p className="justify-content-between d-flex">
                           <span>11 JUL 2021</span>
-                          <span><i class="far fa-eye"></i> 41 <i class="fas fa-comments"></i> 22</span>
+                          <span><i className="far fa-eye"></i> 41 <i className="fas fa-comments"></i> 22</span>
                         </p>
                       </div>
                     </div>

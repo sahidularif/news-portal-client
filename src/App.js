@@ -9,22 +9,26 @@ import PostArticle from "./components/Dashboard/Pages/PostArticle";
 import PrivateRoute from "./components/Dashboard/PrivateRoute/PrivateRoute";
 import Home from "./components/home/Home";
 import NewsDetails from "./components/home/NewsDetails";
-import Login, { sessionInfo } from "./components/login/Login";
+import Login from "./components/login/Login";
 export const LoginContext = createContext();
 export const SessionContext = createContext();
+
 function App() {
+
   const [loggedInUser, SetLoggedInUser] = useState({});
-  const [sessionUser, setSessionUser] = useState({});
-  const sessionEmail = sessionInfo();
-  console.log(sessionEmail);
+  const [sessionUser, setSessionUser] = useState([{
+    email: '',
+  }]);
+  // const sessionEmail = sessionInfo();
+  // console.log(sessionEmail);
   // useEffect(()=>{
-  //   setSessionUser.email(sessionEmail);
+  //   setSessionUser(sessionEmail);
   // })
 
   return (
     <LoginContext.Provider value={[loggedInUser, SetLoggedInUser]}>
       <SessionContext.Provider value={[sessionUser, setSessionUser]}>
-        <div className="App">
+        <div className="">
           <Router>
             <Switch>
 

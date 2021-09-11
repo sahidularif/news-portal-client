@@ -5,7 +5,7 @@ const Navbar = () => {
   
   return (
     <div className={res?'topnav responsive':'topnav'} id="myTopnav">
-    <a href="#home" class="active"> HOME</a>
+    <a href="#home" className="active"> HOME</a>
     <a href="#news">BUSINESS</a>
     <a href="#contact">TECHNOLOGY</a>
     <a href="#about">EDUCATION</a>
@@ -17,8 +17,8 @@ const Navbar = () => {
     <a href="#about">ABOUT</a>
     <a href="/dashboard" className="admin-btn text-end">Dashboard</a>
     
-    <a href={void(0)} class="icon" onClick={()=>setRes(true)}>
-      <i class="fa fa-bars"></i>
+    <a href={void(0)} className="icon" onClick={()=>setRes(true)}>
+      <i className="fa fa-bars"></i>
     </a>
   </div>
   );

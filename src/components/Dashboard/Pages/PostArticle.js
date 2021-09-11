@@ -1,11 +1,12 @@
+import axios from 'axios';
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const PostArticle = () => {
   const { register, handleSubmit, watch, errors } = useForm();
-  const [file, setFile] = useState(null);
+  const [image, setImage] = useState(null);
   const [success, setSuccess] = useState(false);
-  const [info, setInfo] = useState({
+  const [article, setArticle] = useState({
     author: "",
     title: "",
     category: "",
@@ -14,28 +15,38 @@ const PostArticle = () => {
 
   // Handle input
   const handleBlur = (e) => {
-    const newService = { ...info };
-    newService[e.target.name] = e.target.value;
-    setInfo(newService);
+    const newArticle = { ...article };
+    newArticle[e.target.name] = e.target.value;
+    setArticle(newArticle);
   };
 
   // Handle file upload
   const handleFileChange = (e) => {
-    const newFile = e.target.files[0];
-    console.log(newFile);
-    setFile(newFile);
+    const imageData = new FormData();
+    imageData.set('key', 'a50bd9e146ea263516d08f905253b815')
+    imageData.append('image', e.target.files[0]);
+
+    axios.post('https://api.imgbb.com/1/upload',
+      imageData)
+      .then(function (response) {
+        setImage(response.data.data.display_url);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
   };
 
   // When form submitted:
   const handleFormSubmit = () => {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('author', info.author);
-    formData.append('category', info.category);
-    formData.append('title', info.title);
-    formData.append('article', info.article);
+    formData.append('image', image);
+    formData.append('author', article.author);
+    formData.append('category', article.category);
+    formData.append('title', article.title);
+    formData.append('article', article.article);
 
-    fetch('https://aqueous-fortress-58437.herokuapp.com/post-article', {
+    fetch('http://localhost:4000/post-article', {
       method: 'POST',
       body: formData,
     })

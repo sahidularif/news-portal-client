@@ -1,7 +1,12 @@
 .login-container {
   box-shadow: 0px 1px 8px 2px rgba(82, 95, 109, 0.15);
   border-radius: 10px;
-  padding: 10px 10px;
+  margin: 50px auto;
+  border: 5px solid #ddd;
+  padding: 20px 20px;
+}
+.login-container p {
+  border-bottom: 2px solid #ddd;
 }
 .submit_button {
   background-color: #392564;
@@ -13,7 +18,42 @@
 .log-title {
   border-bottom: 1px solid #ddd;
 }
-.btn-gmail {
-  background-color: tomato;
-  color: #fff;
+
+.social-login {
+  display: flex;
+  height: auto;
+  flex-direction: column;
+  border-top: 2px solid rgba(82, 95, 109, 0.15);
+  margin: auto auto;
+}
+.showError {
+  border-color: #a94442 !important;
+  color: #a94442 !important;
+  margin-bottom: 2px;
+  font-size: 12px;
+}
+
+.social-login img {
+  height: 25px;
+  width: 25px;
+  text-align: left;
+  margin-right: 2px;
+}
+
+.social-login .btn {
+  /* display: flex; */
+  width: 50%;
+  border-radius: 57px !important;
+  border: 1px solid #c7c7c7;
+  padding: 5px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.social-login .btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none;
 }

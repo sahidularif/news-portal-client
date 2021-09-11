@@ -1,109 +1,179 @@
 import { initializeApp } from 'firebase/app';
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
+import jwt_decode from 'jwt-decode';
 import React, { useContext, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router';
 import { LoginContext } from '../../App';
+import googleIcon from '../../images/googleIcon.png';
 import '../../styles/login.css';
 import Navbar from '../home/Navbar';
 import firebaseConfig from './firebaseConfig';
 const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider();
 
-export const sessionInfo = () => {
-    const email = sessionStorage.getItem('email');
-    if (email) {
-        return email;
+// check is user logged in
+export const isLoggedIn = () => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      return false;
     }
-};
+    const decodedToken = jwt_decode(token);
+    // console.log(decodedToken)
+    // get current time
+    const currentTime = new Date().getTime() / 1000;
+    // compare the expiration time with the current time
+    // will return false if expired and will return true if not expired
+    return decodedToken.exp > currentTime;
+  };
+  // Sign Out handler:
+export const handleSignOut = () => {
+    const auth = getAuth();
+    return auth()
+      .signOut()
+      .then((res) => {
+        const signedOutUser = {
+          isSignedIn: false,
+          name: '',
+          email: '',
+          error: '',
+          success: false,
+        };
+        return signedOutUser;
+      })
+      .catch((err) => {
+        const errorMessage = err.message;
+        console.log(errorMessage);
+      });
+  };
 
-const Login = () => {
-    const [newUser, setNewuser] = useState(true);
-    const [errmessage, setErrMessage] = useState('');
-    const [user, setUser] = useState({
-        isSignedIn: false,
-        displayName: '',
-        email: '',
-        password: '',
-        error: ''
-    })
-
-    console.log(user);
-    const [loggedInUser, SetLoggedInUser] = useContext(LoginContext);
+function Login() {
+    const [loggedInUser, setLoggedInUser] = useContext(LoginContext);
     const history = useHistory();
     const location = useLocation();
     const { from } = location.state || { from: { pathname: "/" } };
+    const [newUser, setNewUser] = useState(true);
+    const [user, setUser] = useState({
+        isSignedIn: false,
+        name: null,
+        email: null,
+        password: null,
+        cPassword: null,
+    });
+    const [errmessage, setErrMessage] = useState({
+        formErrors: {}
+    });
+    // form validation rules 
+    console.log(newUser);
 
-    const getInfo = (e) => {
-        let isFormValid = true;
-        if (e.target.name === 'email') {
-            isFormValid = /\S+@\S+\.\S+/.test(e.target.value);
-        }
-        if (e.target.name === 'password') {
-            let validPass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(e.target.value)
-            if (validPass) {
-                setErrMessage('')
-                let userPass = { ...user }
-                userPass.password = e.target.value
-                setUser(userPass)
-            }
-            else { setErrMessage('Minimum eight characters, at least one letter and one number') }
-        }
-        if (e.target.name === 'confirmPassword') {
-            if (e.target.value === user.password) {
-                let userPass = { ...user }
-                userPass.password = e.target.value
-                setUser(userPass)
-                setErrMessage('')
-            }
-            else { setErrMessage('Password not Match With Privious One') }
-        }
-
-        if (isFormValid) {
-            const newUser = { ...user }
-            newUser[e.target.name] = e.target.value;
-            setUser(newUser);
-        }
-    }
-    const submitData = (e) => {
-        if (newUser && user.email && user.password) {
-            const auth = getAuth();
-            createUserWithEmailAndPassword(auth, user.email, user.password)
-                .then((userCredential) => {
-                    const newUserinfo = { ...user };
-                    newUserinfo.isSignedIn = true;
-                    newUserinfo.error = '';
-                    newUserinfo.success = true;
-                    setUser(newUserinfo);
-                    updateUserName(user.displayName);
-                    SetLoggedInUser(newUserinfo);
-                    history.replace(from);
-                })
-                .catch((error) => {
-                    const newUserinfo = { ...user };
-                    newUserinfo.error = error.message
-                    setUser(newUserinfo);
-                });
-        }
-        if (!newUser && user.email && user.password) {
-            const auth = getAuth();
-            signInWithEmailAndPassword(auth, user.email, user.password)
-                .then((userCredential) => {
-                    const newUser = { ...userCredential.user };
-                    newUser.isSignedIn = true;
-                    newUser.error = '';
-                    newUser.success = true;
-                    setUser(newUser);
-                    SetLoggedInUser(newUser);
-                    sessionLogin(user.email)
-                    history.replace(from);
-                })
-                .catch((error) => {
-                    const newUser = { ...user };
-                    newUser.error = error.message
-                    setUser(newUser);
-                });
-        }
+    const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (formValidation()) {
+
+            if (newUser && user.email && user.password) {
+                const auth = getAuth();
+                return createUserWithEmailAndPassword(auth, user.email, user.password)
+                    .then((userCredential) => {
+                        let newUserinfo = { ...user };
+                        newUserinfo.isSignedIn = true;
+                        newUserinfo.error = '';
+                        newUserinfo.success = true;
+                        setUser(newUserinfo);
+                        updateUserName(user.name);
+                        setLoggedInUser(newUserinfo);
+                        history.replace(from);
+                    })
+                // .catch((error) => {
+                //     const newUserinfo = {};
+                //     newUserinfo.error = error.message
+                //     return newUserinfo;
+                // });
+            }
+            if (!newUser && user.email && user.password) {
+                const auth = getAuth();
+                signInWithEmailAndPassword(auth, user.email, user.password)
+                    .then((userCredential) => {
+                        let newUser = { ...userCredential.user };
+                        newUser.isSignedIn = true;
+                        newUser.error = '';
+                        newUser.success = true;
+                        setUser(newUser);
+                        setLoggedInUser(newUser);
+                        storeAuthToken();
+                        history.replace(from);
+                    })
+                // .catch((error) => {
+                //     const newUserInfo = {};
+                //     newUserInfo.error = error.message;
+                //     newUserInfo.success = false;
+                //     return newUserInfo;
+                // });
+            }
+
+        }
+
+    }
+    const handleInputChange = (e) => {
+        let newUserInfo = { ...user };
+        newUserInfo[e.target.name] = e.target.value;
+        setUser(newUserInfo);
+    }
+    console.log(user);
+    const formValidation = () => {
+        let formErrors = {};
+        let formIsValid = true;
+        //Name field
+        if (!user.name) {
+            formIsValid = false;
+            formErrors["name"] = "Name is required.";
+        }
+        if (user.name == !null && user.name !== undefined) {
+            formIsValid = true;
+            formErrors["name"] = "";
+        }
+        if (!newUser && !user.name) {
+            formIsValid = true;
+            formErrors["name"] = "";
+        }
+        //Email field
+        if (!user.email) {
+            formIsValid = false;
+            formErrors["email"] = "Email is required.";
+        }
+        if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email))) {
+            formIsValid = false;
+            formErrors["email"] = "Email not valid";
+        }
+        if (user.email) {
+            formIsValid = true;
+            setErrMessage("");
+        }
+        //Password field
+        if (!user.password) {
+            formIsValid = false;
+            formErrors["password"] = "Password is required.";
+        }
+        if (!(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(user.password))) {
+            formIsValid = false;
+            formErrors["password"] = "Minimum eight characters, at least one letter and one number";
+        }
+        if (user.password) {
+            formIsValid = true;
+            formErrors["password"] = "";
+        }
+        //Confirm password field
+        if (!user.cPassword) {
+            formIsValid = false;
+            formErrors["cPassword"] = "Confirm password is required.";
+        }
+        if (!newUser && !user.cPassword) {
+            formIsValid = true;
+            formErrors["name"] = "";
+        }
+        setErrMessage({ formErrors: formErrors });
+
+
+        return formIsValid;
     }
 
     const googleSignin = () => {
@@ -112,66 +182,136 @@ const Login = () => {
             .then((result) => {
                 const { displayName, email } = result.user;
                 const signedInUser = {
-                    isSignedIn: true,
-                    displayName,
-                    email
+                    name: displayName, email: email, success: true
                 }
-                setUser(signedInUser);
-                SetLoggedInUser(signedInUser);
-                sessionLogin(result.user.email);
-                history.replace(from);
+                storeAuthToken();
+                return signedInUser;
             }).catch((error) => {
                 var errorMessage = error.message;
                 console.log(errorMessage);
             });
-    }
-
+    };
     const updateUserName = name => {
-        const user = initializeApp.auth().currentUser;
-
-        user.updateProfile({
-            displayName: name,
-        }).then(function () {
-            console.log("congrates")
-        }).catch(function (error) {
-            console.log(error)
+        const auth = getAuth();
+        updateProfile(auth.currentUser, {
+            displayName: name
+        }).then((res) => {
+            console.log('update display name')
+        }).catch((error) => {
+            console.log((error.message));
         });
-        console.log(name);
-    }
-    const sessionLogin = (email) => {
-        sessionStorage.setItem("email", email);
     }
 
+    // Handle Response
+    const handleResponse = (res, redirect) => {
+        //console.log(res.error)
+        if (res.error) {
+            newUser && setErrMessage["resErr"](res.error);
+            !newUser && setErrMessage["resErr"](res.error);
+        } else {
+            setUser(res);
+            setLoggedInUser(res)
+            redirect && history.replace(from);
+            newUser && setErrMessage("")
+            !newUser && setErrMessage("")
+        }
+    }
+    const storeAuthToken = () => {
+        getAuth()
+          .currentUser.getIdToken(/* forceRefresh */ true)
+          .then(function (idToken) {
+            sessionStorage.setItem('token', idToken);
+            history.replace(from);
+          })
+          .catch(function (error) {
+            // Handle error
+          });
+      };
+      
+    console.log(user)
     return (
-        <div className='home'>
-            <div className='container'>
+        <div className="container-fluid">
+            <div className="row">
                 <Navbar />
-                <div className='container-fluid w-50 text-center text-dark mt-5 login-container justify-content-center'>
-                    <div className="col-md-12 log-title"> {newUser ? <h5>Create Your Account</h5> : <h5>Login</h5>}</div>
-                    <form onSubmit={submitData} className='text-center mt-5 justify-content-center'>
-                        {newUser && <input onBlur={getInfo} type="name" className="form-control rounded-pill mb-3" name="displayName" placeholder='Name' required />
-                        }
-                        <input onBlur={getInfo} type="email" className="form-control rounded-pill mb-3" name="email" placeholder='Email' required />
-                        <input onBlur={getInfo} type="password" className="form-control rounded-pill mb-3" name="password" placeholder="Password" required />
-                        {newUser && <input onBlur={getInfo} type="password" className="form-control rounded-pill mb-3" name="confirmPassword" placeholder="Confirm Password" required />}
-                        <p>{errmessage}</p>
-
-                        <input type="submit" className=" form-control submit_button" value={newUser ? 'Sign Up' : 'Login'} />
-                    </form>
-                    <div>
-                        {newUser ? <p>Already have an account?<span style={{ fontWeight: 'bolder', color: 'tomato', cursor: 'pointer' }} onClick={() => setNewuser(!newUser)} > Login</span> </p> : <p>Don't have an account <span style={{ fontWeight: 'bolder', color: 'tomato', cursor: 'pointer' }} onClick={() => setNewuser(!newUser)}>Sign Up</span></p>}
-                        <p style={{ color: "red" }}>{user.error}</p>
-                        {user.success && <p style={{ color: 'green' }}>User {newUser ? 'created' : 'Logged In'} successfully</p>}
+            </div>
+            <div className="row">
+                <div className="col-md-6 login-container">
+                    <div className="col-md-12">
+                        <p>{newUser ? (<span>Create Account</span>) : (<span>Login</span>)}</p>
                     </div>
-                </div>
-                <div className='container text-center' >
-                    <button onClick={googleSignin} className="btn text-dark w-25 border m-3 rounded-pill">Continue with Google</button>
-
+                    <form onSubmit={handleSubmit}>
+                        <div className="row g-3">
+                            {
+                                newUser &&
+                                <div className="col">
+                                    <label>Name</label>
+                                    <input name="name" type="text"
+                                        onChange={handleInputChange}
+                                        value={user.name}
+                                        className={`form-control ${errmessage.formErrors.name ? ' showError' : ''}`} />
+                                    {errmessage.formErrors.name &&
+                                        <div style={{ color: "red", paddingBottom: 10 }}>{errmessage.formErrors.name}</div>
+                                    }
+                                </div>}
+                            <div className="col">
+                                <label>Email</label>
+                                <input name="email" type="text"
+                                    onChange={handleInputChange}
+                                    value={user.email}
+                                    className={`form-control ${errmessage.formErrors.email ? ' showError' : ''}`} />
+                                {errmessage.formErrors.email &&
+                                    <div style={{ color: "red", paddingBottom: 10 }}>{errmessage.formErrors.email}</div>
+                                }
+                            </div>
+                        </div>
+                        <div className="row g-3">
+                            <div className="col">
+                                <label>Password</label>
+                                <input name="password" type="password"
+                                    onChange={handleInputChange}
+                                    value={user.password}
+                                    className={`form-control ${errmessage.formErrors.password ? ' showError' : ''}`} />
+                                {errmessage.formErrors.password &&
+                                    <div style={{ color: "red", paddingBottom: 10 }}>{errmessage.formErrors.password}</div>
+                                }
+                            </div>
+                            {newUser &&
+                                <div className="col">
+                                    <label>Confirm Password</label>
+                                    <input name="cPassword" type="password"
+                                        onChange={handleInputChange}
+                                        value={user.cPassword}
+                                        className={`form-control ${errmessage.formErrors.cPassword ? ' showError' : ''}`} />
+                                    {errmessage.formErrors.cPassword &&
+                                        <div style={{ color: "red", paddingBottom: 10 }}>{errmessage.formErrors.cPassword}</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div className="row g-0 p-2">
+                            <div className="col justify-content-around">
+                                <button type="submit" className="btn btn-primary mr-5">Submit</button>
+                                {/* <button type="button" onClick={() => reset()} className="btn btn-secondary">Reset</button> */}
+                            </div>
+                            <div className="col">
+                                {newUser ? <h6>Already have an account?<span style={{ fontWeight: 'bolder', color: 'tomato', cursor: 'pointer' }} onClick={() => setNewUser(!newUser)} > Login</span> </h6> : <h6>Don't have an account <span style={{ fontWeight: 'bolder', color: 'tomato', cursor: 'pointer' }} onClick={() => setNewUser(!newUser)}>Sign Up</span></h6>}
+                                {/* <p style={{ color: "red" }}>{user.error}</p> */}
+                            </div>
+                        </div>
+                    </form>
+                    <div className="col-md-12 ">
+                        <div className='social-login align-items-center justify-content-center'>
+                            <span>OR</span>
+                            <button className="btn" onClick={googleSignin}>
+                                <img src={googleIcon} alt='google icon' />{' '}
+                                <span>Continue with Google</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-    );
-};
+    )
+}
 
 export default Login;
