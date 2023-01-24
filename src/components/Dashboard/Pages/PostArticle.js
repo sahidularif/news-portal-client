@@ -46,7 +46,7 @@ const PostArticle = () => {
     formData.append('title', article.title);
     formData.append('article', article.article);
 
-    fetch('http://localhost:4000/post-article', {
+    fetch('https://news-portal-server-production.up.railway.app/post-article', {
       method: 'POST',
       body: formData,
     })
