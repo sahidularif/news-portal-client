@@ -8,7 +8,7 @@ const AddAdmin = () => {
         const newAdmin = { ...data };
         console.log('new ad', newAdmin);
 
-        fetch('https://aqueous-fortress-58437.herokuapp.com/addAdmin', {
+        fetch('https://news-portal-server-production.up.railway.app/addAdmin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newAdmin),
